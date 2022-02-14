@@ -1,6 +1,7 @@
 package main
 
 import (
+	"kursach/CORS"
 	"kursach/Shifr"
 	"kursach/port"
 
@@ -10,6 +11,8 @@ import (
 func main() {
 
 	r := gin.Default()
+	CORS.ConnectDB()
+	r.SetTrustedProxies([]string{"192.168.1.2"})
 	v1 := r.Group("/v1")
 	{
 		v1.POST("/aes", Shifr.Aes1)

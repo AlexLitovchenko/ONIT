@@ -10,12 +10,11 @@ import (
 func Quest2(con *gin.Context) {
 	fmt.Println("Port Scanning")
 	results := InitialScan("localhost")
-	fmt.Println(results)
+	//ßfmt.Println(results)
 
 	widescanresults := WideScan("localhost")
-	fmt.Println(widescanresults)
+	//fmt.Println(widescanresults)
 
-	con.JSON(http.StatusOK, gin.H{
-		"status": "posted",
-	})
+	All_Ports := append(results, widescanresults...)
+	con.JSON(http.StatusOK, All_Ports)
 }
