@@ -19,5 +19,6 @@ func ConnectDB() *gorm.DB {
 		panic("Не удалось подключиться к базе данных")
 	}
 	db.AutoMigrate(&Auto{})
+
 	return db
 }

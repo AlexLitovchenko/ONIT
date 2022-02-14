@@ -2,6 +2,7 @@ package main
 
 import (
 	"kursach/CORS"
+	"kursach/Methods"
 	"kursach/Shifr"
 	"kursach/port"
 
@@ -13,11 +14,19 @@ func main() {
 	r := gin.Default()
 	CORS.ConnectDB()
 	r.SetTrustedProxies([]string{"192.168.1.2"})
+
 	v1 := r.Group("/v1")
 	{
 		v1.POST("/aes", Shifr.Aes1)
 		v1.POST("/desc", Shifr.Desc1)
 		v1.GET("/ports", port.Quest2)
+	}
+	v3 := r.Group("/v3")
+	{
+		v3.GET("/GetAuto", Methods.GetAllAuto)
+		v3.POST("/AddAuto", Methods.AddAuto)
+		v3.POST("/DelAuto/:id", Methods.DelAuto)
+		v3.POST("/UpdateAuto/:id", Methods.UpdateAuto)
 	}
 
 	//fmt.Println("Server is listening...")
