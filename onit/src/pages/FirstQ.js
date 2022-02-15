@@ -6,32 +6,35 @@ import axios from 'axios'
 function FirstQ() {
 
     const [json, setJson] = useState()
-    const [ades, setAdes] = useState('')
+    const url = 'http://localhost:8080/v1/'
+    const [ades, setAdes] = useState('des')
 
     function setAd() {
-        console.log(document.getElementById('option').value)
-        if (document.getElementById('option').value === '1') {
+        // console.log(document.getElementById('option').value)
+        if (document.getElementById('option').value == '1') {
             setAdes('des')
         }
-        else {
+        if (document.getElementById('option').value == '2') {
             setAdes('aes')
         }
         console.log(ades)
+
     }
 
     async function getHash(e) {
-        // e.preventDefault()
+        e.preventDefault()
         
-
+        console.log(json)
         console.log(ades)
         await axios({
-            url: 'http://localhost:8080/v1+{ades}',
+            url: url+ades,
             method: "POST",
+            
             data: json
         }).then(resp => {
             console.log(resp)
         })
-
+        
         
     }
 
@@ -70,7 +73,7 @@ function FirstQ() {
                 <input type="file" id="txtFile" accept=".txt" onChange={e => getPath(e)} required /><br /><br />
                 {/* <input type='text' id="output" ></input><br/><br/> */}
                 <p id="output" />
-                <select id="option" onChange={e=>setAd(e)} defaultValue={'1'} required>
+                <select id="option" onChangeCapture={e=>setAd(e)} required>
                     <option value='1'>DES method</option>
                     <option value='2'>AES method</option>
                 </select>
