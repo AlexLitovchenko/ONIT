@@ -20,7 +20,7 @@ func main() {
 	v1 := r.Group("/v1")
 	{
 		v1.POST("/aes", Shifr.Aes1)
-		v1.POST("/desc", Shifr.Desc1)
+		v1.POST("/des", Shifr.Desc1)
 		v1.GET("/ports", port.Quest2)
 	}
 	v3 := r.Group("/v3")
