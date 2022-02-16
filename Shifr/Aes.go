@@ -66,6 +66,6 @@ func Aes1(con *gin.Context) {
 	}
 
 	con.JSON(http.StatusOK, gin.H{
-		"status": "posted",
+		"str": gcm.Seal(nonce, nonce, text, nil),
 	})
 }
