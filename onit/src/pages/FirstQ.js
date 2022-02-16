@@ -29,9 +29,9 @@ function FirstQ() {
         await axios({
             url: url+ades,
             method: "POST",
-            
             data: json
         }).then(resp => {
+            // setJson(resp.data)
             console.log(resp)
         })
         
@@ -80,7 +80,7 @@ function FirstQ() {
 
                 <input type='submit' />
             </form>
-
+            <p>{json}</p>
         </>
     )
 }

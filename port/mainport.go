@@ -1,15 +1,16 @@
 package port
 
 import (
+	// "fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Quest2(con *gin.Context) {
-	//fmt.Println("Port Scanning")
+	// fmt.Println("Port Scanning")
 	results := InitialScan("localhost")
-	//ßfmt.Println(results)
+	// fmt.Println(results)
 
 	//widescanresults := WideScan("localhost")
 	//fmt.Println(widescanresults)

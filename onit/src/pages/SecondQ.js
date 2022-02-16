@@ -6,13 +6,14 @@ export default function SecondQ() {
   const [json, setJson] = useState()
 
   async function getPorts() {
-
+    console.log('start')
     const resp = await axios ({
       method: "GET",
       url: url,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then(resp => {
       setJson(resp.json())
+      console.log(json)
     })
 
   }
