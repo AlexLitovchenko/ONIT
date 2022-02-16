@@ -8,9 +8,11 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -20,6 +22,7 @@ const (
 
 func Desc1(con *gin.Context) {
 	//miwen := "7379533330307A63724F554661783369495A653253393533775377426948704A"
+	logrus.Printf("All_OK")
 	miwen, err := ioutil.ReadFile("DescStart.txt")
 	if err != nil {
 		fmt.Println(err)
@@ -30,7 +33,9 @@ func Desc1(con *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
+	con.JSON(http.StatusOK, gin.H{
+		"str": str,
+	})
 }
 
 func genKey(key string) string {
