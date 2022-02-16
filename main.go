@@ -7,12 +7,14 @@ import (
 	"kursach/port"
 
 	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
 )
 
 func main() {
 
 	r := gin.Default()
 	CORS.ConnectDB()
+	r.Use(cors.Default())
 	r.SetTrustedProxies([]string{"192.168.1.2"})
 
 	v1 := r.Group("/v1")
