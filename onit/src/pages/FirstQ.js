@@ -6,6 +6,7 @@ import axios from 'axios'
 function FirstQ() {
 
     const [json, setJson] = useState()
+    const [dat, setDat] = useState()
     const url = 'http://localhost:8080/v1/'
     const [ades, setAdes] = useState('des')
 
@@ -31,10 +32,12 @@ function FirstQ() {
             method: "POST",
             data: json
         }).then(resp => {
-            // setJson(resp.data)
-            console.log(resp)
+            setDat(resp.data)
+            // console.log(resp.data)
+            var output = document.getElementById('newData')
+            output.textContent = resp.data.str
+            // console.log(dat)
         })
-        
         
     }
 
@@ -80,7 +83,8 @@ function FirstQ() {
 
                 <input type='submit' />
             </form>
-            <p>{json}</p>
+            {/* <p>{json}</p> */}
+            <p id='newData'/>
         </>
     )
 }
