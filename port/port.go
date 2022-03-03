@@ -4,20 +4,24 @@ import (
 	"fmt"
 	"net"
 	"strconv"
+	"sync"
 	"time"
 )
 
 type ScanResult struct {
-	Port     string
-	Protocol string
-	State    string
+	Port     string `json:"port"`
+	Protocol string `json:"protocol"`
+	State    string `json:"state"`
 	Service  string
 }
 
 var results []ScanResult
 
-func ScanPort(protocol, hostname string, port int, ch chan bool) ScanResult {
+var wg sync.WaitGroup
+var count int
 
+func ScanPort(protocol, hostname string, port int) {
+	defer wg.Done()
 	result := ScanResult{Port: strconv.Itoa(port)}
 	result.Protocol = protocol
 	address := hostname + ":" + strconv.Itoa(port)
@@ -25,19 +29,17 @@ func ScanPort(protocol, hostname string, port int, ch chan bool) ScanResult {
 
 	if err != nil {
 		result.State = "Closed"
-		//return result
 		results = append(results, result)
 		fmt.Println(result)
-		ch <- true
-		return result
-	}
-	//defer conn.Close()
+		count++
 
-	result.State = "Open"
-	results = append(results, result)
-	fmt.Println(result)
-	ch <- true
-	return result
+	} else {
+		result.State = "Open"
+		results = append(results, result)
+		fmt.Println(result)
+		count++
+	}
+
 }
 
 // func InitialScan(hostname string) []ScanResult {
@@ -56,21 +58,20 @@ func ScanPort(protocol, hostname string, port int, ch chan bool) ScanResult {
 // }
 
 func WideScan(hostname string) []ScanResult {
-	if len(results) != 0 {
-		return results
-	}
+
+	// if len(results) != 0 {
+	// 	return results
+	// }
 	//	var results []ScanResult
-	ch := make(chan bool)
+	//ch := make(chan bool)
+	wg.Add(120002)
+	//results = append(results, ScanPort("udp", hostname, i))
 	for i := 0; i <= 60000; i++ {
-		//results = append(results, ScanPort("udp", hostname, i))
-		go ScanPort("udp", hostname, i, ch)
-		go ScanPort("tcp", hostname, i, ch)
-
+		go ScanPort("udp", hostname, i)
+		go ScanPort("tcp", hostname, i)
 	}
-
-	for j := 0; j <= 120000; j++ {
-		<-ch
-	}
-
+	//<-ch
+	wg.Wait()
+	fmt.Print(count)
 	return results
 }

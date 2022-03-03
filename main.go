@@ -16,12 +16,12 @@ func main() {
 	CORS.ConnectDB()
 	r.Use(cors.Default())
 	r.SetTrustedProxies([]string{"192.168.1.2"})
-
 	v1 := r.Group("/v1")
 	{
 		v1.POST("/aes", Shifr.Aes1)
 		v1.POST("/des", Shifr.Desc1)
 		v1.GET("/ports", port.Quest2)
+
 	}
 	v3 := r.Group("/v3")
 	{
