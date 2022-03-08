@@ -59,9 +59,10 @@ func ScanPort(protocol, hostname string, port int) {
 
 func WideScan(hostname string) []ScanResult {
 
-	// if len(results) != 0 {
-	// 	return results
-	// }
+	if len(results) != 0 {
+		fmt.Print(count)
+		return results
+	}
 	//	var results []ScanResult
 	//ch := make(chan bool)
 	wg.Add(120002)
