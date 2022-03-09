@@ -8,6 +8,9 @@ import (
 	"time"
 )
 
+var results []ScanResult
+var resultsv1 []ScanResult
+
 type ScanResult struct {
 	Port     string `json:"port"`
 	Protocol string `json:"protocol"`
@@ -15,12 +18,10 @@ type ScanResult struct {
 	Service  string
 }
 
-var results []ScanResult
-
 var wg sync.WaitGroup
 var count int
 
-func ScanPort(protocol, hostname string, port int) {
+func ScanUDPPort(protocol, hostname string, port int) {
 	defer wg.Done()
 	result := ScanResult{Port: strconv.Itoa(port)}
 	result.Protocol = protocol
@@ -41,38 +42,61 @@ func ScanPort(protocol, hostname string, port int) {
 	}
 
 }
+func ScanTCPPort(protocol, hostname string, port int) {
+	defer wg.Done()
+	result := ScanResult{Port: strconv.Itoa(port)}
+	result.Protocol = protocol
+	address := hostname + ":" + strconv.Itoa(port)
+	_, err := net.DialTimeout(protocol, address, 60*time.Second)
 
-// func InitialScan(hostname string) []ScanResult {
+	if err != nil {
+		result.State = "Closed"
+		resultsv1 = append(resultsv1, result)
+		fmt.Println(result)
+		count++
 
-// 	var results []ScanResult
+	} else {
+		result.State = "Open"
+		resultsv1 = append(resultsv1, result)
+		fmt.Println(result)
+		count++
+	}
 
-// 	for i := 0; i <= 1024; i++ {
-// 		results = append(results, ScanPort("udp", hostname, i))
-// 	}
-
-// 	for i := 0; i <= 1024; i++ {
-// 		results = append(results, ScanPort("tcp", hostname, i))
-// 	}
-
-// 	return results
-// }
-
+}
 func WideScan(hostname string) []ScanResult {
 
 	if len(results) != 0 {
 		fmt.Print(count)
 		return results
 	}
-	//	var results []ScanResult
-	//ch := make(chan bool)
-	wg.Add(120002)
-	//results = append(results, ScanPort("udp", hostname, i))
+
+	wg.Add(60001)
 	for i := 0; i <= 60000; i++ {
-		go ScanPort("udp", hostname, i)
-		go ScanPort("tcp", hostname, i)
+		go ScanUDPPort("udp", hostname, i)
 	}
-	//<-ch
+
 	wg.Wait()
 	fmt.Print(count)
+	count = 0
+
 	return results
+}
+
+func WideScan1(hostname string) []ScanResult {
+
+	if len(resultsv1) != 0 {
+		fmt.Print(count)
+		return resultsv1
+	}
+	wg.Add(60001)
+
+	for i := 0; i <= 60000; i++ {
+		go ScanTCPPort("tcp", hostname, i)
+	}
+
+	wg.Wait()
+	fmt.Print(count)
+	count = 0
+	return resultsv1
+
 }

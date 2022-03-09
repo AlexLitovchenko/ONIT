@@ -20,7 +20,8 @@ func main() {
 	{
 		v1.POST("/aes", Shifr.Aes1)
 		v1.POST("/des", Shifr.Desc1)
-		v1.GET("/ports", port.Quest2)
+		v1.GET("/portUDP", port.Quest2)
+		v1.GET("/portTCP", port.Quest3)
 
 	}
 	v3 := r.Group("/v3")

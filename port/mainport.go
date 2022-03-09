@@ -9,14 +9,12 @@ import (
 )
 
 func Quest2(con *gin.Context) {
-	// fmt.Println("Port Scanning")
-	//results := InitialScan("localhost")
-	// fmt.Println(results)
 
 	widescanresults := WideScan("localhost")
-	//fmt.Println(len(widescanresults))
 
-	//All_Ports := append(results, widescanresults...)
-	//sort.Slice(widescanresults, func(i, j int) bool { return widescanresults[i].Port < widescanresults[j].Port })
 	con.JSON(http.StatusOK, widescanresults)
+}
+func Quest3(con *gin.Context) {
+	scaner := WideScan1("localhost")
+	con.JSON(http.StatusOK, scaner)
 }
