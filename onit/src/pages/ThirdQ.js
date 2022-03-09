@@ -2,15 +2,23 @@ import axios from 'axios'
 import React, { useState } from 'react'
 
 export default function ThirdQ() {
-  const [name, setName] = useState()
-  const [nickname, setNickname] = useState()
-  const [age, setAge] = useState()
+  const [mark, setMark] = useState()
+  const [model, setModel] = useState()
+  let id = 0
+  // const [age, setAge] = useState()
   const [isEdit, setIsEdit] = useState(false)
   const [clearRow, setClearRow] = useState()
 
-  function addUser(e) {
-    console.log(name, nickname, age)
+  async function addUser(e) {
+    console.log(mark, model)
+    await axios({
+      url: 'http://localhost:8080/v3/AddAuto',
+      method: 'POST',
+      data: ''
+    })
+
   }
+
 
   const table = ''
   async function createRows() {
@@ -30,22 +38,22 @@ export default function ThirdQ() {
   }
 
   function SetClearRow() {
+    // const ID = 0
     if (!isEdit) {
+      id++
       return (<>
-        <td>Andrew</td>
-        <td>remixrty</td>
-        <td>21</td>
+        <th scope="row">{id}</th>
+        <td>BMW</td>
+        <td>X5</td>
       </>)
     }
     else return (<>
+      <th scope="row">{id}</th>
       <td>
-        <input type={"text"} id="name" onChange={e => setName(e.target.value)} required />
+        <input type={"text"} id="mark" onChange={e => setMark(e.target.value)} required />
       </td>
       <td>
-        <input type={"text"} id="nickname" onChange={e => setName(e.target.value)} required />
-      </td>
-      <td>
-        <input type={"text"} id="age" onChange={e => setName(e.target.value)} required />
+        <input type={"text"} id="model" onChange={e => setModel(e.target.value)} required />
       </td>
       <td>
         <button type="button" className="btn btn-dark">Push Edits</button>
@@ -55,32 +63,32 @@ export default function ThirdQ() {
   }
 
   function SetRow() { //сделать функцию массивом, чтобы в нее добавлялись строки друг за другом
-      return (
-        <>
-          <tr> {/* первая строка */}
-            <th scope="row">1</th>
-            <SetClearRow />
-            <td>
-              <button type="button" className="btn btn-dark">Delete user</button>
-              <button type="button" className="btn btn-dark" onClick={e => setIsEdit(!isEdit)}>Edit user</button>
-            </td>
-          </tr>
-        </>
-      )
-    
+    return (
+      <>
+        <tr>
+          <SetClearRow />
+          <td>
+            <button type="button" className="btn btn-dark">Delete user</button>
+            <button type="button" className="btn btn-dark" onClick={e => setIsEdit(!isEdit)}>Edit user</button>
+          </td>
+        </tr>
+      </>
+    )
+
   }
 
 
   async function submit(e) {
     e.preventDefault()
-    const json = JSON.stringify(name, nickname, age)
+    const json = JSON.stringify(id, mark, model)
 
     await axios({
-      url: 'НЕИЗВЕСТНО',
+      url: 'http://localhost:8080/v3/AddAuto',
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: json
-    })
+    }).catch(error =>
+      console.log(error))
   }
 
 
@@ -91,10 +99,9 @@ export default function ThirdQ() {
       <table className="table table-hover">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Nickname</th>
-            <th scope="col">Age</th>
+            <th scope="col">ID</th>
+            <th scope="col">Mark</th>
+            <th scope="col">Model</th>
             <th scope='col'>Buttons</th>
           </tr>
         </thead>
@@ -105,13 +112,11 @@ export default function ThirdQ() {
 
       <form onSubmit={submit}>
 
-        <input type={"text"} id="name" onChange={e => setName(e.target.value)} required />
+        <input type={"text"} id="Mark" onChange={e => setMark(e.target.value)} required />
 
-        <input type={"text"} id="nickname" onChange={e => setNickname(e.target.value)} required />
+        <input type={"text"} id="nickname" onChange={e => setModel(e.target.value)} required />
 
-        <input type={"text"} id="age" onChange={e => setAge(e.target.value)} required />
-
-        <button type="submit" className="btn btn-dark" onClick={e => addUser(e)}>Add user</button>
+        <button type="submit" className="btn btn-dark">Add user</button>
 
       </form>
 
