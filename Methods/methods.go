@@ -28,7 +28,7 @@ func AddAuto(c *gin.Context) {
 	}
 	auto := CORS.Auto{Marka: input.Marka, Model: input.Model}
 	gormDB.Create(&auto)
-	c.JSON(http.StatusOK, gin.H{"autos": auto})
+	c.JSON(http.StatusOK, gin.H{"message": "Auto added"})
 
 }
 func UpdateAuto(c *gin.Context) {
@@ -47,7 +47,7 @@ func UpdateAuto(c *gin.Context) {
 
 	gormDB.Model(&auto).Update("marka", input.Marka)
 	gormDB.Model(&auto).Update("model", input.Model)
-	c.JSON(http.StatusOK, gin.H{"autos": auto})
+	c.JSON(http.StatusOK, gin.H{"message": "Auto updated"})
 
 }
 func DelAuto(c *gin.Context) {
