@@ -9,7 +9,10 @@ function FirstQ() {
     const [dat, setDat] = useState()
     const url = 'http://localhost:8080/v1/'
     const [ades, setAdes] = useState('des')
-
+    useEffect(function reset(){
+        document.title = ades
+        console.log(ades)
+    })
     function setAd() {
         // console.log(document.getElementById('option').value)
         if (document.getElementById('option').value == '1') {
@@ -18,7 +21,7 @@ function FirstQ() {
         if (document.getElementById('option').value == '2') {
             setAdes('aes')
         }
-        console.log(ades)
+        // console.log(ades)
 
     }
 

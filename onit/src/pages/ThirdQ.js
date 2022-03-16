@@ -1,98 +1,135 @@
 import axios from 'axios'
-import React, { useState } from 'react'
-
+import React, { useEffect, useState } from 'react'
+import ReactDOMServer from 'react-dom/server'
 export default function ThirdQ() {
-  const [mark, setMark] = useState()
+  const [json, setJson] = useState('hello')
+
+  const [tumbler, setTumbler] = useState(false)
+  const [marka, setMarka] = useState()
   const [model, setModel] = useState()
-  let id = 0
-  // const [age, setAge] = useState()
-  const [isEdit, setIsEdit] = useState(false)
-  const [clearRow, setClearRow] = useState()
+  const url = 'http://localhost:8080/v3/'
+  const [jsonData, setJsonData] = useState()
+  const [displayData, setDisplayData] = useState()
+  const [trContent, setTrContent] = useState()
+  const [trTumbler, setTrTumbler] = useState(false)
 
-  async function addUser(e) {
-    console.log(mark, model)
+
+  useEffect(function stringify() {
+    setJson(JSON.stringify({ marka, model }))
+  })
+
+  useEffect(() => {
+    if (tumbler == false) {
+      getAuto()
+    }
+    // console.log(jsonData)
+  })
+
+  async function getAuto() {
     await axios({
-      url: 'http://localhost:8080/v3/AddAuto',
-      method: 'POST',
-      data: ''
+      url: url + "GetAuto",
+      method: "GET"
+    }).then(resp => {
+      setJsonData(resp.data)
+    }).catch(e => {
+      console.log(e)
     })
-
+    getData()
+    setTumbler(true)
   }
 
+  function editTr(_id) {
+    setTrContent(document.getElementById(_id).innerHTML)
+    console.log(trContent)
+    document.getElementById(_id).innerHTML = ReactDOMServer.renderToString(<Ee _id={_id} />)
+  }
 
-  const table = ''
-  async function createRows() {
+  function tumblerTr(_id) {
+    console.log(trContent)  
+    document.getElementById(_id).innerHTML = trContent
+  }
+
+  function Ee(props) {
+    const _id = props._id
+    return (
+      <tr>
+        <td> {_id} </td>
+        <td> <input type='text' onChange={e => setMarka(e.target.value)} required /> </td>
+        <td> <input type='text' onChange={e => setModel(e.target.value)} required /> </td>
+        <td> <input type='button' onClick={editAuto(setTrTumbler(!trTumbler), _id)} value='Edit Auto' /> </td>
+        <td> <input type='button' onClick={tumblerTr(_id)} value='Back' /> </td>
+      </tr>
+    )
+  }
+
+  async function editAuto(_id) {
+    if (trTumbler) {
+      console.log(model, marka)
+      await axios({
+        url: url + "UpdateAuto/" + _id,
+        method: "POST",
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: json
+      }).catch(e => {
+        console.log(e)
+      })
+      setTrTumbler(!trTumbler)
+    }
+    setTumbler(false)
+  }
+
+  async function deleteAuto(_id) {
+    // if (delTumbler) {
     await axios({
-      url: 'НЕИЗВЕСТНО',
-      method: 'GET'
-    }).then(resp => {
-      table = resp.data
+      url: url + "DelAuto/" + _id,
+      method: "GET"
     }).catch(e => {
       console.log(e)
     })
 
-    // логика с циклом for по json массиву table из get запроса
-    // разбираю каждую строку на поля name, nickname и age, добавляю 2 кнопки удалить изменить
-    // каждый раз обращаться к setclearrow для рендера очередной строки
-
+    setTumbler(false)
+    // }
+    // setDelTumbler(false)
   }
 
-  function SetClearRow() {
-    // const ID = 0
-    if (!isEdit) {
-      id++
-      return (<>
-        <th scope="row">{id}</th>
-        <td>BMW</td>
-        <td>X5</td>
-      </>)
-    }
-    else return (<>
-      <th scope="row">{id}</th>
-      <td>
-        <input type={"text"} id="mark" onChange={e => setMark(e.target.value)} required />
-      </td>
-      <td>
-        <input type={"text"} id="model" onChange={e => setModel(e.target.value)} required />
-      </td>
-      <td>
-        <button type="button" className="btn btn-dark">Push Edits</button>
-      </td>
-    </>)
-    // сделать логику на пуш изменений, оставлять в полях ввода старые значения
-  }
-
-  function SetRow() { //сделать функцию массивом, чтобы в нее добавлялись строки друг за другом
-    return (
-      <>
-        <tr>
-          <SetClearRow />
-          <td>
-            <button type="button" className="btn btn-dark">Delete user</button>
-            <button type="button" className="btn btn-dark" onClick={e => setIsEdit(!isEdit)}>Edit user</button>
-          </td>
-        </tr>
-      </>
-    )
-
-  }
-
-
-  async function submit(e) {
-    e.preventDefault()
-    const json = JSON.stringify(id, mark, model)
-
+  async function addAuto() {
     await axios({
-      url: 'http://localhost:8080/v3/AddAuto',
-      method: 'POST',
+      url: url + "AddAuto",
+      method: "POST",
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: json
-    }).catch(error =>
-      console.log(error))
+    }).catch(e => {
+      console.log(e)
+    })
+    setTumbler(false)
   }
 
+  // useEffect(function getGet(){
+  //   getAuto()
+  // })
 
-
+  function getData() {
+    if (jsonData !== undefined) {
+      setDisplayData(jsonData.map(
+        (info) => {
+          return (
+            <tr id={info.id} >
+              <td>{info.id}</td>
+              <td>{info.marka}</td>
+              <td>{info.model}</td>
+              <td>
+                <input type="button" value="Delete" onClick={e => deleteAuto(info.id)} />
+              </td>
+              <td>
+                <input type="button" value="Edit" onClick={e => editTr(info.id)} />
+              </td>
+            </tr>
+          )
+        })
+      )
+    }
+    else console.log('undef')
+  }
 
   return (
     <>
@@ -103,22 +140,17 @@ export default function ThirdQ() {
             <th scope="col">Mark</th>
             <th scope="col">Model</th>
             <th scope='col'>Buttons</th>
+            <th scope='col'></th>
           </tr>
         </thead>
         <tbody>
-          <SetRow />
+          {displayData}
         </tbody>
       </table>
+      <input type='text' onChange={e => setMarka(e.target.value)} />
+      <input type='text' onChange={e => setModel(e.target.value)} />
+      <input type='button' onClick={e => addAuto(e)} value='Add Auto' />
 
-      <form onSubmit={submit}>
-
-        <input type={"text"} id="Mark" onChange={e => setMark(e.target.value)} required />
-
-        <input type={"text"} id="nickname" onChange={e => setModel(e.target.value)} required />
-
-        <button type="submit" className="btn btn-dark">Add user</button>
-
-      </form>
 
     </>
   )

@@ -28,7 +28,7 @@ func main() {
 	{
 		v3.GET("/GetAuto", Methods.GetAllAuto)
 		v3.POST("/AddAuto", Methods.AddAuto)
-		v3.POST("/DelAuto/:id", Methods.DelAuto)
+		v3.GET("/DelAuto/:id", Methods.DelAuto)
 		v3.POST("/UpdateAuto/:id", Methods.UpdateAuto)
 	}
 
