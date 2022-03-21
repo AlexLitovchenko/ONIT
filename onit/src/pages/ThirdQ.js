@@ -10,7 +10,7 @@ export default function ThirdQ() {
   const url = 'http://localhost:8080/v3/'
   const [jsonData, setJsonData] = useState()
   const [displayData, setDisplayData] = useState()
-  const [trContent, setTrContent] = useState()
+  const [globId, setGlobId] = useState()
   const [trTumbler, setTrTumbler] = useState(false)
 
 
@@ -35,35 +35,50 @@ export default function ThirdQ() {
       console.log(e)
     })
     getData()
+    document.getElementById('btn_edit').style.visibility = 'hidden'
     setTumbler(true)
+    
   }
+
 
   function editTr(_id) {
-    setTrContent(document.getElementById(_id).innerHTML)
-    console.log(trContent)
-    document.getElementById(_id).innerHTML = ReactDOMServer.renderToString(<Ee _id={_id} />)
+    document.getElementById('btn_edit').value = 'Edit Auto id '+_id
+    document.getElementById('btn_edit').style.visibility = 'visible'
+    setGlobId(_id)
   }
 
-  function tumblerTr(_id) {
-    console.log(trContent)  
-    document.getElementById(_id).innerHTML = trContent
-  }
+  // function editTr(_id) {
+  //   const output = document.getElementById(_id).innerHTML
+  //   console.log(output)
+  //   Ee(_id, output)
+  // }
 
-  function Ee(props) {
-    const _id = props._id
-    return (
-      <tr>
-        <td> {_id} </td>
-        <td> <input type='text' onChange={e => setMarka(e.target.value)} required /> </td>
-        <td> <input type='text' onChange={e => setModel(e.target.value)} required /> </td>
-        <td> <input type='button' onClick={editAuto(setTrTumbler(!trTumbler), _id)} value='Edit Auto' /> </td>
-        <td> <input type='button' onClick={tumblerTr(_id)} value='Back' /> </td>
-      </tr>
-    )
-  }
+  // function tumblerTr(_id) {
+  //   console.log(trContent)  
+  //   document.getElementById(_id).innerHTML = trContent
+  // }
 
-  async function editAuto(_id) {
-    if (trTumbler) {
+  // function Ee(_id, output) {
+  //   document.getElementById(_id).innerHTML = "<td> _id </td><td> <input type='text' id='markaEdit' required /> </td>   <td> <input type='text' id='modelEdit' required /> </td>   <td> <input type='button' id='editAuto' value='Edit Auto' /> </td>   <td> <input type='button' onClick={tumblerTr(_id)} value='Back' /> </td>"
+  //   console.log(document.getElementById('markaEdit').value)
+  //   document.getElementById('editAuto').addEventListener("click", editAuto(_id))
+  //   console.log('true')
+
+
+
+  //   // return (
+  //   //   <tr>
+  //       // <td> {_id} </td>
+  //       // <td> <input type='text' id='markaEdit' required /> </td>
+  //       // <td> <input type='text' id='modelEdit' required /> </td>
+  //       // <td> <input type='button' onClick={editAuto} value='Edit Auto' /> </td>
+  //       // <td> <input type='button' onClick={tumblerTr(_id)} value='Back' /> </td>
+  //   //   </tr>
+  //   // )
+  // }
+
+  async function editAuto() {
+    const _id = globId
       console.log(model, marka)
       await axios({
         url: url + "UpdateAuto/" + _id,
@@ -73,8 +88,6 @@ export default function ThirdQ() {
       }).catch(e => {
         console.log(e)
       })
-      setTrTumbler(!trTumbler)
-    }
     setTumbler(false)
   }
 
@@ -91,6 +104,7 @@ export default function ThirdQ() {
     // }
     // setDelTumbler(false)
   }
+  
 
   async function addAuto() {
     await axios({
@@ -114,9 +128,9 @@ export default function ThirdQ() {
         (info) => {
           return (
             <tr id={info.id} >
-              <td>{info.id}</td>
-              <td>{info.marka}</td>
-              <td>{info.model}</td>
+              <td id={info.id+'id'}>{info.id}</td>
+              <td id={info.id+'marka'}>{info.marka}</td>
+              <td id={info.id+'model'}>{info.model}</td>
               <td>
                 <input type="button" value="Delete" onClick={e => deleteAuto(info.id)} />
               </td>
@@ -149,9 +163,8 @@ export default function ThirdQ() {
       </table>
       <input type='text' onChange={e => setMarka(e.target.value)} />
       <input type='text' onChange={e => setModel(e.target.value)} />
-      <input type='button' onClick={e => addAuto(e)} value='Add Auto' />
-
-
+      <input type='button' id='btn_add' onClick={e=>addAuto()} value='Add Auto' /> 
+      <input type='button' id='btn_edit' onClick={e=>editAuto()} />
     </>
   )
 }
