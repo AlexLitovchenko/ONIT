@@ -10,43 +10,38 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 func Aes1(con *gin.Context) {
-	FileName := "AesStart.txt"
-	logrus.Println("Encryption Program v0.01")
-	//text := []byte("My Super Secret Code Stuff")
-	text, err := ioutil.ReadFile(FileName)
-	// if our program was unable to read the file
-	// print out the reason why it can't
+	//FileName := "AesStart.txt"
+	// logrus.Println("Encryption Program v0.01")
+	//text, err := ioutil.ReadFile(FileName)
+	//Попытка прочитать файл, если не вышло, выдача ошибки
+	text, err := con.GetRawData()
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	//ключ
 	key := []byte("passphrasewhichneedstobe32bytes!")
 
-	// generate a new aes cipher using our 32 byte long key
+	//создаем новый aes шифр по нашему ключу
 	c, err := aes.NewCipher(key)
-	// if there are any errors, handle them
+	//Ловим ошибки
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	// gcm or Galois/Counter Mode, is a mode of operation
-	// for symmetric key cryptographic block ciphers
+	// gcm или Galois/Counter Mode, модификация
 	// - https://en.wikipedia.org/wiki/Galois/Counter_Mode
 	gcm, err := cipher.NewGCM(c)
-	// if any error generating new GCM
-	// handle them
+	//Ловим ошибки при генерации gcm
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	// creates a new byte array the size of the nonce
-	// which must be passed to Seal
 	nonce := make([]byte, gcm.NonceSize())
-	// populates our nonce with a cryptographically secure
-	// random sequence
+	//Создаем одноразовый номер с случайной последовательностью
 	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
 		fmt.Println(err)
 	}
@@ -59,9 +54,8 @@ func Aes1(con *gin.Context) {
 
 	//fmt.Println(gcm.Seal(nonce, nonce, text, nil))
 	err = ioutil.WriteFile("AesEnd.data", gcm.Seal(nonce, nonce, text, nil), 0777)
-	// handle this error
+	// Ловим ошибки записи
 	if err != nil {
-		// print it out
 		fmt.Println(err)
 	}
 

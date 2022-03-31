@@ -8,9 +8,11 @@ import (
 	"time"
 )
 
+//Список нащих струтур портов
 var results []ScanResult
 var resultsv1 []ScanResult
 
+//Структура наших портов
 type ScanResult struct {
 	Port     string `json:"port"`
 	Protocol string `json:"protocol"`
@@ -18,9 +20,11 @@ type ScanResult struct {
 	Service  string
 }
 
+// Переменные для синхронизации потоков
 var wg sync.WaitGroup
 var count int
 
+//Скан 1 UDP порта
 func ScanUDPPort(protocol, hostname string, port int) {
 	defer wg.Done()
 	result := ScanResult{Port: strconv.Itoa(port)}
@@ -42,6 +46,8 @@ func ScanUDPPort(protocol, hostname string, port int) {
 	}
 
 }
+
+//Скан 1 TCP порта
 func ScanTCPPort(protocol, hostname string, port int) {
 	defer wg.Done()
 	result := ScanResult{Port: strconv.Itoa(port)}
@@ -63,6 +69,8 @@ func ScanTCPPort(protocol, hostname string, port int) {
 	}
 
 }
+
+//Скан всех UDP портов
 func WideScan(hostname string) []ScanResult {
 
 	if len(results) != 0 {
@@ -82,6 +90,7 @@ func WideScan(hostname string) []ScanResult {
 	return results
 }
 
+//Скан всех TCP портов
 func WideScan1(hostname string) []ScanResult {
 
 	if len(resultsv1) != 0 {

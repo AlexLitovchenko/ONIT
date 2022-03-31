@@ -18,7 +18,7 @@ func main() {
 	r.SetTrustedProxies([]string{"192.168.1.2"})
 	v1 := r.Group("/v1")
 	{
-		v1.POST("/aes", Shifr.Aes1)
+		v1.POST("/aes", Shifr.Aes1, Shifr.DecAes1)
 		v1.POST("/des", Shifr.Desc1)
 		v1.GET("/portUDP", port.Quest2)
 		v1.GET("/portTCP", port.Quest3)

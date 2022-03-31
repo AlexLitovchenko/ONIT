@@ -10,7 +10,7 @@ import (
 )
 
 func DecAes1(con *gin.Context) {
-	fmt.Println("Decryption Program v0.01")
+	fmt.Println("Decryption Program")
 
 	key := []byte("passphrasewhichneedstobe32bytes!")
 	ciphertext, err := ioutil.ReadFile("AesEnd.data")

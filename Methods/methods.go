@@ -7,11 +7,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//Доп структура для обновлнеия таблицы
 type UpdateAutoInput struct {
 	Marka string `json:"marka"`
 	Model string `json:"model"`
 }
 
+//Метод для получения всех данных таблицы авто
 func GetAllAuto(c *gin.Context) {
 	gormDB := CORS.ConnectDB()
 	var autos []CORS.Auto
@@ -19,6 +21,7 @@ func GetAllAuto(c *gin.Context) {
 	c.JSON(http.StatusOK, autos)
 }
 
+//Метод для добавления авто в таблтицу
 func AddAuto(c *gin.Context) {
 	gormDB := CORS.ConnectDB()
 	var input CORS.Auto
@@ -31,6 +34,8 @@ func AddAuto(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Auto added"})
 
 }
+
+//Метод для обновления авто в таблице
 func UpdateAuto(c *gin.Context) {
 	gormDB := CORS.ConnectDB()
 	var auto CORS.Auto
@@ -50,6 +55,8 @@ func UpdateAuto(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Auto updated"})
 
 }
+
+//Метод для удаления авто из таблицы
 func DelAuto(c *gin.Context) {
 	gormDB := CORS.ConnectDB()
 	var auto CORS.Auto
